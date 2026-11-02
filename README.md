@@ -27,13 +27,13 @@
 
 ## Project setup
 
-```bash
+bash
 $ npm install
-```
+
 
 ## Compile and run the project
 
-```bash
+bash
 # development
 $ npm run start
 
@@ -42,11 +42,11 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
-```
+
 
 ## Run tests
 
-```bash
+bash
 # unit tests
 $ npm run test
 
@@ -55,7 +55,7 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
-```
+
 
 ## Deployment
 
@@ -95,9 +95,9 @@ It installs `@nestjs/observe`, wires it into `AppModule` and `main.ts`, and writ
 
 Or do it by hand:
 
-```bash
+bash
 $ npm install @nestjs/observe
-```
+
 
 Then follow the [setup guide](https://docs.nestjs.com/observability/sdk) - it takes a single import and an app key.
 
