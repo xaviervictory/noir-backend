@@ -1,132 +1,143 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NOIR Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST del proyecto **NOIR**, una tienda de ropa streetwear. Este repositorio contiene el backend desarrollado con **NestJS** y **TypeScript**, que atenderá las peticiones del frontend (React + Vite).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+> **Estado del proyecto:** estructura inicial. Los módulos, las rutas y la base de datos ya están creados. La lógica de negocio y la conexión de los módulos con la base de datos se irán incorporando en las próximas etapas.
 
-## Description
+## Tecnologías utilizadas
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [NestJS](https://nestjs.com/) y [TypeScript](https://www.typescriptlang.org/)
+- [Node.js](https://nodejs.org/)
+- [PostgreSQL](https://www.postgresql.org/) y pgAdmin
+- [@nestjs/config](https://docs.nestjs.com/techniques/configuration) para las variables de entorno
+- [Postman](https://www.postman.com/) para documentar y probar los endpoints
+- Git y GitHub para el control de versiones
 
-## Project setup
-
-bash
-$ npm install
+## Estructura del proyecto
 
 
-## Compile and run the project
-
-bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-
-
-## Run tests
-
-bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+src/
+├── main.ts
+└── modules/
+    ├── app/          # Módulo raíz (AppModule)
+    ├── products/     # Productos
+    ├── categories/   # Categorías
+    ├── users/        # Usuarios
+    ├── auth/         # Autenticación
+    ├── orders/       # Pedidos
+    └── contact/      # Mensajes de contacto
+database/
+└── noir_db.sql       # Script de la base de datos con datos de prueba
 
 
-## Deployment
+Cada módulo (excepto `app`) se generó con Nest CLI e incluye `dto/`, `entities/`, controlador, servicio y módulo. Todos están importados en `AppModule`.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## Endpoints
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Cada módulo expone las rutas de un CRUD sobre su recurso:
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+| Método | Ruta | Descripción |
+| --- | --- | --- |
+| POST | `/recurso` | Crear |
+| GET | `/recurso` | Listar todos |
+| GET | `/recurso/:id` | Obtener uno por id |
+| PATCH | `/recurso/:id` | Actualizar |
+| DELETE | `/recurso/:id` | Eliminar |
+
+Recursos disponibles: `products`, `categories`, `users`, `auth`, `orders` y `contact`. Por ejemplo: `http://localhost:4000/products`.
+
+> Las rutas definitivas dependen de los controladores y de los prefijos configurados. En el módulo `auth` se agregarán más adelante rutas específicas de registro e inicio de sesión.
+
+## Base de datos
+
+Base relacional en PostgreSQL llamada `noir_db`. Tablas:
+
+| Tabla | Descripción |
+| --- | --- |
+| `categories` | Categorías de productos |
+| `users` | Usuarios y roles (`customer`, `admin`) |
+| `products` | Productos, con clave foránea a `categories` |
+| `orders` | Pedidos, con clave foránea a `users` |
+| `order_items` | Ítems de cada pedido (relación N a M entre `orders` y `products`) |
+| `contact_messages` | Mensajes del formulario de contacto |
+
+Incluye claves primarias, claves foráneas y restricciones (`UNIQUE`, `CHECK`, `NOT NULL`), con al menos 5 registros por tabla.
+
+Para crearla, ejecutar el script `database/noir_db.sql` dentro de una base llamada `noir_db` (por ejemplo, desde el Query Tool de pgAdmin).
+
+## Instalación y ejecución
+
+1. Instalar [Node.js](https://nodejs.org/) y [PostgreSQL](https://www.postgresql.org/download/).
+2. Clonar el repositorio:
+   bash
+   git clone https://github.com/xaviervictory/noir-backend.git
+   cd noir-backend
+   
+3. Instalar las dependencias:
+   bash
+   npm install
+   
+4. Crear el archivo `.env` a partir de `.env.example` (ver la sección siguiente).
+5. Crear la base de datos `noir_db` y ejecutar `database/noir_db.sql`.
+6. Iniciar el servidor en modo desarrollo:
+   bash
+   npm run start:dev
+   
+
+### Scripts disponibles
+
+| Comando | Descripción |
+| --- | --- |
+| `npm run start:dev` | Inicia el servidor y recarga al guardar |
+| `npm run build` | Compila el proyecto |
+| `npm run start:prod` | Ejecuta la versión compilada |
+
+## Variables de entorno
+
+Crear un archivo `.env` en la raíz del proyecto:
+
+```env
+PORT=4000
+DATABASE_URL=postgresql://usuario:password@localhost:5432/noir_db
+API_BASE_URL=http://localhost:4000/
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+| Variable | Descripción |
+| --- | --- |
+| `PORT` | Puerto en el que corre la API |
+| `DATABASE_URL` | Cadena de conexión a PostgreSQL |
+| `API_BASE_URL` | URL base de la API |
 
-## Observability
+> El archivo `.env` está incluido en `.gitignore` y **no se sube al repositorio**. El archivo `.env.example` sirve como plantilla.
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+## Pruebas y documentación con Postman
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+Los endpoints se organizan y prueban con **Postman**. La colección `NOIR-API.postman_collection.json` incluye una carpeta por módulo con las cinco operaciones.
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
+1. Abrir Postman e importar el archivo de la colección.
+2. Verificar la variable `base_url` (por defecto `http://localhost:4000`).
+3. Ejecutar `npm run start:dev` y enviar las peticiones.
 
-To add it to this project, run this and approve the code it prints at [observe.nestjs.com/link](https://observe.nestjs.com/link) - signing up for free if you have no account:
+## Flujo de trabajo con Git
 
-```bash
-$ npx @nestjs/observe link
-```
+| Rama | Uso |
+| --- | --- |
+| `main` | Rama estable del proyecto |
+| `dev` | Rama de integración del desarrollo |
+| `feature/nombre-funcionalidad` | Nuevas funcionalidades |
+| `fix/nombre-correccion` | Correcciones |
+| `refactor/nombre-cambio` | Reorganización o mejora del código |
+| `docs/nombre-documentacion` | Cambios en la documentación |
 
-It installs `@nestjs/observe`, wires it into `AppModule` and `main.ts`, and writes the app key and secret into `.env`, which every `nest start` script (`start`, `start:dev`, `start:debug`) then loads. In production, set `OBSERVE_APP_KEY` and `OBSERVE_APP_SECRET` in the environment instead.
+Los cambios se integran mediante Pull Requests hacia `dev`, y de `dev` hacia `main`, con commits descriptivos.
 
-Or do it by hand:
+## Próximos pasos
 
-bash
-$ npm install @nestjs/observe
+- Conectar los módulos con la base de datos.
+- Definir los DTO y las entidades de cada módulo.
+- Implementar registro e inicio de sesión en `auth`.
+- Conectar el frontend de NOIR con esta API.
 
+## Autor
 
-Then follow the [setup guide](https://docs.nestjs.com/observability/sdk) - it takes a single import and an app key.
-
-The free plan needs no payment details and covers 300,000 events a month. You can also browse the [live demo](https://www.observe-demo.nestjs.com/dashboard) first - the whole dashboard over a busy service's data, with nothing to install.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observe](https://observe.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Proyecto desarrollado por **Xavier** como trabajo práctico de programación.
