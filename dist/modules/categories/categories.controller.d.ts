@@ -4,9 +4,29 @@ import { UpdateCategoryDto } from './dto/update-category.dto.js';
 export declare class CategoriesController {
     private readonly categoriesService;
     constructor(categoriesService: CategoriesService);
-    create(createCategoryDto: CreateCategoryDto): string;
-    findAll(): string;
-    findOne(id: string): string;
-    update(id: string, updateCategoryDto: UpdateCategoryDto): string;
-    remove(id: string): string;
+    create(createCategoryDto: CreateCategoryDto): Promise<{
+        name: string;
+        description: string | null;
+        id: number;
+    }>;
+    findAll(): import("../../generated/prisma/internal/prismaNamespace.js").PrismaPromise<{
+        name: string;
+        description: string | null;
+        id: number;
+    }[]>;
+    findOne(id: number): Promise<{
+        name: string;
+        description: string | null;
+        id: number;
+    }>;
+    update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<{
+        name: string;
+        description: string | null;
+        id: number;
+    }>;
+    remove(id: number): Promise<{
+        name: string;
+        description: string | null;
+        id: number;
+    }>;
 }

@@ -1,26 +1,72 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service.js';
+import {
+  isPrismaForeignKeyError,
+  isPrismaUniqueConstraintError,
+} from '../prisma/prisma-error.util.js';
 import { CreateCategoryDto } from './dto/create-category.dto.js';
 import { UpdateCategoryDto } from './dto/update-category.dto.js';
 
 @Injectable()
 export class CategoriesService {
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(dto: CreateCategoryDto) {
+    try {
+      return await this.prisma.category.create({ data: dto });
+    } catch (error) {
+      this.manejarNombreRepetido(error);
+      throw error;
+    }
   }
 
   findAll() {
-    return `This action returns all categories`;
+    return this.prisma.category.findMany({ orderBy: { id: 'asc' } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(id: number) {
+    const category = await this.prisma.category.findUnique({ where: { id } });
+
+    if (!category) {
+      throw new NotFoundException(`No existe una categoría con id ${id}.`);
+    }
+
+    return category;
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(id: number, dto: UpdateCategoryDto) {
+    await this.findOne(id);
+
+    try {
+      return await this.prisma.category.update({ where: { id }, data: dto });
+    } catch (error) {
+      this.manejarNombreRepetido(error);
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: number) {
+    await this.findOne(id);
+
+    try {
+      return await this.prisma.category.delete({ where: { id } });
+    } catch (error) {
+      if (isPrismaForeignKeyError(error)) {
+        throw new ConflictException(
+          'No se puede eliminar la categoría porque tiene productos asociados.',
+        );
+      }
+      throw error;
+    }
+  }
+
+  private manejarNombreRepetido(error: unknown) {
+    if (isPrismaUniqueConstraintError(error)) {
+      throw new ConflictException('Ya existe una categoría con ese nombre.');
+    }
   }
 }
