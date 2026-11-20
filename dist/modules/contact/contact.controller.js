@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, } from '@nestjs/common';
 import { ContactService } from './contact.service.js';
 import { CreateContactDto } from './dto/create-contact.dto.js';
 import { UpdateContactDto } from './dto/update-contact.dto.js';
@@ -26,13 +26,13 @@ let ContactController = class ContactController {
         return this.contactService.findAll();
     }
     findOne(id) {
-        return this.contactService.findOne(+id);
+        return this.contactService.findOne(id);
     }
     update(id, updateContactDto) {
-        return this.contactService.update(+id, updateContactDto);
+        return this.contactService.update(id, updateContactDto);
     }
     remove(id) {
-        return this.contactService.remove(+id);
+        return this.contactService.remove(id);
     }
 };
 __decorate([
@@ -50,24 +50,24 @@ __decorate([
 ], ContactController.prototype, "findAll", null);
 __decorate([
     Get(':id'),
-    __param(0, Param('id')),
+    __param(0, Param('id', ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], ContactController.prototype, "findOne", null);
 __decorate([
     Patch(':id'),
-    __param(0, Param('id')),
+    __param(0, Param('id', ParseIntPipe)),
     __param(1, Body()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, UpdateContactDto]),
+    __metadata("design:paramtypes", [Number, UpdateContactDto]),
     __metadata("design:returntype", void 0)
 ], ContactController.prototype, "update", null);
 __decorate([
     Delete(':id'),
-    __param(0, Param('id')),
+    __param(0, Param('id', ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], ContactController.prototype, "remove", null);
 ContactController = __decorate([
