@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, } from '@nestjs/common';
 import { ProductsService } from './products.service.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
@@ -26,13 +26,13 @@ let ProductsController = class ProductsController {
         return this.productsService.findAll();
     }
     findOne(id) {
-        return this.productsService.findOne(+id);
+        return this.productsService.findOne(id);
     }
     update(id, updateProductDto) {
-        return this.productsService.update(+id, updateProductDto);
+        return this.productsService.update(id, updateProductDto);
     }
     remove(id) {
-        return this.productsService.remove(+id);
+        return this.productsService.remove(id);
     }
 };
 __decorate([
@@ -50,24 +50,24 @@ __decorate([
 ], ProductsController.prototype, "findAll", null);
 __decorate([
     Get(':id'),
-    __param(0, Param('id')),
+    __param(0, Param('id', ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "findOne", null);
 __decorate([
     Patch(':id'),
-    __param(0, Param('id')),
+    __param(0, Param('id', ParseIntPipe)),
     __param(1, Body()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, UpdateProductDto]),
+    __metadata("design:paramtypes", [Number, UpdateProductDto]),
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "update", null);
 __decorate([
     Delete(':id'),
-    __param(0, Param('id')),
+    __param(0, Param('id', ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "remove", null);
 ProductsController = __decorate([

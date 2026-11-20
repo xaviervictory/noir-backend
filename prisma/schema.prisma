@@ -1,0 +1,83 @@
+// Schema de Prisma 7 de NOIR
+// Los campos usan snake_case para coincidir con los DTOs, el SQL y Postman.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(50)
+  description String?
+  products    Product[]
+
+  @@map("categories")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(100)
+  email         String   @unique @db.VarChar(150)
+  password_hash String   @db.VarChar(255)
+  role          String   @default("customer") @db.VarChar(20)
+  created_at    DateTime @default(now())
+  orders        Order[]
+
+  @@map("users")
+}
+
+model Product {
+  id          Int         @id @default(autoincrement())
+  name        String      @db.VarChar(150)
+  description String?
+  price       Decimal     @db.Decimal(10, 2)
+  stock       Int         @default(0)
+  image_url   String?     @db.VarChar(255)
+  on_sale     Boolean     @default(false)
+  category_id Int
+  category    Category    @relation(fields: [category_id], references: [id], onDelete: Restrict)
+  created_at  DateTime    @default(now())
+  order_items OrderItem[]
+
+  @@map("products")
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  user_id    Int
+  user       User        @relation(fields: [user_id], references: [id], onDelete: Restrict)
+  status     String      @default("pendiente") @db.VarChar(20)
+  total      Decimal     @db.Decimal(10, 2)
+  created_at DateTime    @default(now())
+  items      OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id         Int     @id @default(autoincrement())
+  order_id   Int
+  order      Order   @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  product_id Int
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Restrict)
+  quantity   Int
+  unit_price Decimal @db.Decimal(10, 2)
+
+  @@map("order_items")
+}
+
+model ContactMessage {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(100)
+  email      String   @db.VarChar(150)
+  subject    String   @db.VarChar(100)
+  message    String
+  created_at DateTime @default(now())
+
+  @@map("contact_messages")
+}

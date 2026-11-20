@@ -4,9 +4,139 @@ import { UpdateOrderDto } from './dto/update-order.dto.js';
 export declare class OrdersController {
     private readonly ordersService;
     constructor(ordersService: OrdersService);
-    create(createOrderDto: CreateOrderDto): string;
-    findAll(): string;
-    findOne(id: string): string;
-    update(id: string, updateOrderDto: UpdateOrderDto): string;
-    remove(id: string): string;
+    create(createOrderDto: CreateOrderDto): Promise<{
+        user: {
+            name: string;
+            id: number;
+            email: string;
+        };
+        items: ({
+            product: {
+                name: string;
+                description: string | null;
+                price: import("@prisma/client-runtime-utils").Decimal;
+                stock: number;
+                image_url: string | null;
+                on_sale: boolean;
+                category_id: number;
+                created_at: Date;
+                id: number;
+            };
+        } & {
+            id: number;
+            product_id: number;
+            quantity: number;
+            unit_price: import("@prisma/client-runtime-utils").Decimal;
+            order_id: number;
+        })[];
+    } & {
+        created_at: Date;
+        id: number;
+        user_id: number;
+        status: string;
+        total: import("@prisma/client-runtime-utils").Decimal;
+    }>;
+    findAll(): import("../../generated/prisma/internal/prismaNamespace.js").PrismaPromise<({
+        user: {
+            name: string;
+            id: number;
+            email: string;
+        };
+        items: ({
+            product: {
+                name: string;
+                description: string | null;
+                price: import("@prisma/client-runtime-utils").Decimal;
+                stock: number;
+                image_url: string | null;
+                on_sale: boolean;
+                category_id: number;
+                created_at: Date;
+                id: number;
+            };
+        } & {
+            id: number;
+            product_id: number;
+            quantity: number;
+            unit_price: import("@prisma/client-runtime-utils").Decimal;
+            order_id: number;
+        })[];
+    } & {
+        created_at: Date;
+        id: number;
+        user_id: number;
+        status: string;
+        total: import("@prisma/client-runtime-utils").Decimal;
+    })[]>;
+    findOne(id: number): Promise<{
+        user: {
+            name: string;
+            id: number;
+            email: string;
+        };
+        items: ({
+            product: {
+                name: string;
+                description: string | null;
+                price: import("@prisma/client-runtime-utils").Decimal;
+                stock: number;
+                image_url: string | null;
+                on_sale: boolean;
+                category_id: number;
+                created_at: Date;
+                id: number;
+            };
+        } & {
+            id: number;
+            product_id: number;
+            quantity: number;
+            unit_price: import("@prisma/client-runtime-utils").Decimal;
+            order_id: number;
+        })[];
+    } & {
+        created_at: Date;
+        id: number;
+        user_id: number;
+        status: string;
+        total: import("@prisma/client-runtime-utils").Decimal;
+    }>;
+    update(id: number, updateOrderDto: UpdateOrderDto): Promise<{
+        user: {
+            name: string;
+            id: number;
+            email: string;
+        };
+        items: ({
+            product: {
+                name: string;
+                description: string | null;
+                price: import("@prisma/client-runtime-utils").Decimal;
+                stock: number;
+                image_url: string | null;
+                on_sale: boolean;
+                category_id: number;
+                created_at: Date;
+                id: number;
+            };
+        } & {
+            id: number;
+            product_id: number;
+            quantity: number;
+            unit_price: import("@prisma/client-runtime-utils").Decimal;
+            order_id: number;
+        })[];
+    } & {
+        created_at: Date;
+        id: number;
+        user_id: number;
+        status: string;
+        total: import("@prisma/client-runtime-utils").Decimal;
+    }>;
+    remove(id: number): Promise<{
+        created_at: Date;
+        id: number;
+        user_id: number;
+        status: string;
+        total: import("@prisma/client-runtime-utils").Decimal;
+    }>;
 }
