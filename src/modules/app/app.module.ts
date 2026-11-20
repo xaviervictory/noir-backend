@@ -7,9 +7,11 @@ import { UsersModule } from '../users/users.module.js';
 import { AuthModule } from '../auth/auth.module.js';
 import { OrdersModule } from '../orders/orders.module.js';
 import { ContactModule } from '../contact/contact.module.js';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     ProductsModule,
     CategoriesModule,
     UsersModule,
