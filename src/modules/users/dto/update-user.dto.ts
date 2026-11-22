@@ -1,4 +1,7 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { PartialType, PickType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './create-user.dto.js';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
+// Solo se pueden modificar el nombre y el correo
+export class UpdateUserDto extends PartialType(
+  PickType(CreateUserDto, ['name', 'email'] as const),
+) {}
